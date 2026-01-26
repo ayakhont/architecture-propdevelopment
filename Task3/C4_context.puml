@@ -2,18 +2,22 @@
 !include <C4/C4_Context>
 
 Person(resident, "Собственник / Жилец", "Использует мобильное приложение для управления доступом")
-System(mobileApp, "Мобильное приложение для собственников", "Текущее приложение компании для собственников")
-System(coreSystem, "Группа сервисов ЖКУ", "Услуги собственникам и управление данными собственников")
 
+System_Boundary(platform, "Группа сервисов ЖКУ") {
+    System(mobileApp, "Мобильное приложение для собственников", "Текущее приложение компании для собственников")
+    System(coreSystem, "Существующие сервисы ЖКУ", "Услуги собственникам и управление данными собственников")
+    System(intercom, "Интеллектуальный домофон","Видео, открытие двери, распознавание лиц")
+    System(barrier, "Интеллектуальный шлагбаум","Управление проездом, распознавание номеров")
+}
 System_Ext(partnerSmartHome, "Партнёр «Умный дом»", "Предоставляет интеллектуальные сервисы доступа")
-System_Ext(intercom, "Интеллектуальный домофон","Видео, открытие двери, распознавание лиц")
-System_Ext(barrier, "Интеллектуальный шлагбаум","Управление проездом, распознавание номеров")
 
 Rel(resident, mobileApp, "Управляет доступом, просматривает события")
 Rel(mobileApp, coreSystem, "Получение данных пользователя, прав доступа, объектов")
-Rel(coreSystem, partnerSmartHome, "Передаёт правила доступа, списки разрешений")
-Rel(partnerSmartHome, intercom, "Управляет доступом")
-Rel(partnerSmartHome, barrier, "")
-Rel(partnerSmartHome, coreSystem,"События доступа, логи, статусы устройств")
+Rel(coreSystem, intercom, "Управление")
+Rel(coreSystem, barrier, "Управление")
+Rel(intercom, partnerSmartHome,"Управление")
+Rel(partnerSmartHome, intercom, "события доступа, логи, статусы устройств")
+Rel(barrier, partnerSmartHome,"Управление")
+Rel(partnerSmartHome, barrier, "события доступа, логи, статусы устройств")
 
 @enduml
